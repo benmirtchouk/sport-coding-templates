@@ -4,23 +4,78 @@
 #define ios ios::sync_with_stdio(false); cin.tie(0);  cout.tie(0)
 
 using namespace std;
+typedef long long ll;
 
-int main() {
-  int n,k;
+deque<int> Q;
+void push(int x) {
+  while (!Q.empty() && Q.back() >= x)
+    Q.pop_back();
+  Q.push_back(x);
+}
+
+void one_dim() {
+  int n, k;
   cin >> n >> k;
 
   vector<int> v(n);
   forn(i, n) cin >> v[i];
 
-  deque<pair<int, int>> window;
   forn(i, n) {
-    while (!window.empty() && window.back().first >= v[i])
-      window.pop_back();
-    window.push_back({v[i], i});
+    push(v[i]);
 
-    while(window.front().second <= i - k)
-      window.pop_front();
+    if (i >= k - 1) {
+      cout << "[" << i - k << ", " << i << "] -> " << Q.front() << "\n";
 
-    cout << (window.front().first) << ' ';
+      if (Q.front() == v[i - k + 1])
+        Q.pop_front();
+    }
   }
+}
+
+void two_dim() {
+  int n, m, a, b;
+  cin >> n >> m >> a >> b;
+
+  vector<vector<int>> v(n, vector<int>(m));
+  forn(i, n) forn(j, m) cin >> v[i][j];
+
+  vector<vector<int>> rows(n, vector<int>(m - b + 1));
+  forn(i, n) {
+    Q.clear();
+    forn(j, m) {
+      push(v[i][j]);
+
+      if (j >= b - 1) {
+        rows[i][j - b + 1] = Q.front();
+
+        if (Q.front() == v[i][j - b + 1])
+          Q.pop_front();
+      }
+    }
+  }
+
+  vector<vector<int>> ans(n - a + 1, vector<int>(m - b + 1));
+  forn(j, m - b + 1) {
+    Q.clear();
+    forn(i, n) {
+      push(rows[i][j]);
+
+      if (i >= a - 1) {
+        ans[i - a + 1][j] = Q.front();
+
+        if (Q.front() == rows[i - a + 1][j])
+          Q.pop_front();
+      }
+    }
+  }
+
+  ll f = 0;
+  forn(i, n - a + 1) forn(j, m - b + 1) f += ans[i][j];
+  cout << f << "\n";
+}
+
+int main() {
+//  one_dim();
+  two_dim();
+
 }

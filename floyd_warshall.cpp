@@ -19,9 +19,9 @@ int main() {
     dist[a][b] = dist[b][a] = w; //undirected
   }
 
-  for (int i = 0; i < n; i++)
-    for (int j = 0; j < n; j++)
-      for (int k = 0; k < n; k++)
+  for (int k = 0; k < n; k++)
+    for (int i = 0; i < n; i++)
+      for (int j = 0; j < n; j++)
         relax(i, j, k, dist);
 
   return 0;
