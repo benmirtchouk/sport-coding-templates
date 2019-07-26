@@ -4,6 +4,18 @@
 using namespace std;
 typedef pair<int, int> pii;
 
+/*
+ Remember lazy dijkstra for when the number of nodes
+ pushed to pq may be really high (but we only need a few dists)
+
+ q.top() = {-dist, p, i}
+ where dist = distance from source to adj[p][i]
+
+ -> transition to {-dist + d1 - d2, p, i+1} & {-dist - d, adj[p][i], 0}
+
+ ex: https://codeforces.com/contest/1196/submission/57821476
+*/
+
 int main() {
   int n, m;
   cin >> n >> m;
