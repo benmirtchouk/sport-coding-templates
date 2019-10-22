@@ -17,7 +17,7 @@ bool dfs(int u, int par) {
     if (!seen[v]) {
       if(dfs(v, u))
         return 1;
-    } else if (seen[v] && v != par)
+    } else if (v != par)
       return 1;
 
   return 0;

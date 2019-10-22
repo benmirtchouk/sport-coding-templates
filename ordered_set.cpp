@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #define all(a) a.begin(), a.end()
 #define forn(i,n) for(int i = 0; i < (int) n; i++)
-#define ios ios::sync_with_stdio(false); cin.tie(0);  cout.tie(0)
+#define ios ios::sync_with_stdio(false); cin.tie(0); cout.tie(0)
 
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -14,6 +14,11 @@ ordered_set<ll> s;
 
 int main() {
   srand(time(0));
+
+  s.insert(5);
+  s.insert(5);
+  cout << s.size() << "\n";
+  return 0;
 
   int n = 1e5;
   forn(i, n) s.insert(1ll * i * i);

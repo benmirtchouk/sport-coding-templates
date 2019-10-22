@@ -85,36 +85,6 @@ avl* insert(avl *root, int x) {
   return root;
 }
 
-/* END AVL */
-
-int smallcount(avl *root, int v) {
-  if (!root) return 0;
-
-  int ans = 0;
-  ans += smallcount(root->l, v);
-  if (root->x <= v) ans++;
-  if (root->x < v) ans += smallcount(root->r, v);
-
-  return ans;
-}
-
-vector<int> sorted;
-void printRange(avl *root, int l, int r) {
-  if (!root) return;
-
-  if (l <= root->x) printRange(root->l, l, r);
-  if (l <= root->x && root->x <= r) sorted.push_back(root->x);
-  if (root->x <= r) printRange(root->r, l, r);
-}
-
-bool checkBST(avl *root) {
-  if (!root) return 1;
-  if (root->l && root->x < root->l->x) return 0;
-  if (root->r && root->x >= root->r->x) return 0;
-
-  return checkBST(root->l) && checkBST(root->r);
-}
-
 int kth(avl *root, int k) {
   int l = root->l ? root->l->sz : 0;
 
@@ -122,9 +92,6 @@ int kth(avl *root, int k) {
   if (k == l + 1) return root->x;
   return kth(root->r, k - l - 1);
 }
-
-unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-mt19937 g1(seed);
 
 int main() {
   avl *root = 0;
@@ -135,30 +102,4 @@ int main() {
     root = insert(root, x);
     s.insert(x);
   }
-
-  /* test smallcount() */
-  forn(i, 1e2) {
-    int x = rand();
-    int a = smallcount(root, x);
-    int b = distance(s.begin(), s.upper_bound(x));
-    assert(a==b);
-  }
-
-  /* test printRange() */
-  int i = 0;
-  printRange(root, 500, 1000);
-  for(auto it = s.lower_bound(500); it != s.upper_bound(1000); it++, i++) {
-    assert(*it == sorted[i]);
-  }
-
-  /* test checkBST() */
-  root->l->l->l->l->x = 0;
-  cout << checkBST(root) << "\n";
-
-  /* test kth() */
-  auto it = s.begin();
-  forn(i, s.size()) {
-    assert(*it++ == kth(root, i + 1));
-  }
-
 }

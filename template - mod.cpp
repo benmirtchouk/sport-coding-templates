@@ -8,8 +8,9 @@ using namespace std;
 typedef long long ll;
 
 struct num {
-  num(ll x=0): x(x) {}
+  num(ll x = 0): x((x % MOD + MOD) % MOD) {}
   num& operator+=(const num& m) { x = (x + m.x) % MOD; return *this; }
+  num& operator-=(const num& m) { x = (x - m.x + MOD) % MOD; return *this; }
   num& operator*=(const num& m) { x = (x * m.x) % MOD; return *this; }
 
   num exp(ll p) {
@@ -25,6 +26,10 @@ struct num {
 
   ll x;
 };
+
+num operator*(num a, num b) { num ret(a); ret *= b; return ret; }
+num operator+(num a, num b) { num ret(a); ret += b; return ret; }
+num operator-(num a, num b) { num ret(a); ret -= b; return ret; }
 
 ll exp(ll a, ll p) {
   if (!a) return 0;
