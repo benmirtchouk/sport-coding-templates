@@ -1,82 +1,62 @@
 #include <bits/stdc++.h>
+#define all(a) a.begin(), a.end()
+#define forn(i,n) for(int i = 0; i < (int) n; i++)
+#define ios ios::sync_with_stdio(false); cin.tie(0); cout.tie(0)
 
-#define inf (1e9)
-
+#define inf 1000000000
 using namespace std;
+typedef long long ll;
 
-typedef pair<int, int> pii;
+struct segset {
+  segset(): seg(), length(0) {}
 
-set<pii> segments;
+  void insert(ll a, ll b) {
+    if (seg.size() == 0) {
+      seg.insert({a, b});
+      length = b - a;
+      return;
+    }
+    pair<ll, ll> nw{a, b};
 
-void prnt() {
-  for (auto it = segments.begin(); it != segments.end(); it++)
-    cout << "[" << it->first << ", " << it->second << "] ";
-  cout << "\n\n";
-}
+    auto lo = seg.upper_bound({a, inf});
+    if (lo != seg.begin()) {
+      --lo;
+      if (lo->second >= a)
+        nw.first = lo->first;
+    }
 
-bool ins(int st, int en) {
-  if (!segments.size()) {
-    segments.insert({st, en});
-    return 1;
+    auto hi = seg.upper_bound({b, inf});
+    if (hi != seg.begin()) {
+      --hi;
+      if (hi->second >= b)
+        nw.second = hi->second;
+    }
+
+    while(seg.size() > 0) {
+      auto it = seg.lower_bound({nw.first, -inf});
+      if (it == seg.end() || it->second > nw.second) break;
+
+      length -= (it->second - it->first);
+      seg.erase(it);
+    }
+
+    length += (nw.second - nw.first);
+    seg.insert(nw);
   }
 
-  auto lo = segments.upper_bound({st, inf});
-  auto hi = segments.upper_bound({en, inf});
-  if (hi != segments.begin()) hi--;
-  bool sub = 0;
-  if (lo != segments.begin()) {
-    lo--;
-    sub = 1;
-  }
-
-  bool stin = lo != segments.end() && (lo->first <= st && st <= lo->second);
-  if (sub && !stin && lo != segments.end()) {
-    lo++;
-    stin = lo != segments.end() && (lo->first <= st && st <= lo->second);
-  }
-  bool enin = hi != segments.end() && (hi->first <= en && en <= hi->second);
-
-  if (lo == hi && stin && enin)
-    return 0;
-  if (lo == hi && !stin && !enin) {
-    if (st <= lo->first && hi->second <= en)
-      segments.erase(lo,++hi);
-    segments.insert({st, en});
-    return 1;
-  }
-
-  int mn = st, mx = en;
-
-  if (stin) mn = min(mn, lo->first);
-  if (enin) mx = max(mx, hi->second);
-
-  segments.erase(lo, ++hi);
-  segments.insert(pii{mn, mx});
-
-  return 1;
-}
+  set<pair<ll, ll>> seg;
+  ll length;
+};
 
 int main() {
-  ins(5, 6);
-  prnt();
-  ins(1, 3);
-  prnt();
-  ins(2, 4);
-  prnt();
-  ins(10, 14);
-  prnt();
-  ins(-3, 0);
-  prnt();
-  ins(4, 5);
-  prnt();
-  ins(5, 7);
-  prnt();
-  ins(3, 4);
-  prnt();
-  ins(8, 9);
-  prnt();
-  ins(-1, 8);
-  prnt();
+  int n;
+  cin >> n;
 
-  return 0;
+  segset segs;
+  forn(i, n) {
+    int l, r;
+    cin >> l >> r;
+    segs.insert(l, r);
+    cout << segs.length << "\n";
+  }
 }
