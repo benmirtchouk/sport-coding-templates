@@ -8,10 +8,10 @@ typedef pair<int, int> pii;
  Remember lazy dijkstra for when the number of nodes
  pushed to pq may be really high (but we only need a few dists)
 
- q.top() = {-dist, p, i}
+ q.top() = {-dist, p, i, source}
  where dist = distance from source to adj[p][i]
 
- -> transition to {-dist + d1 - d2, p, i+1} & {-dist - d, adj[p][i], 0}
+ -> transition to {-dist + d1 - d2, p, i+1, source} & {-dist - d, adj[p][i], 0, source}
 
  ex: https://codeforces.com/contest/1196/submission/57821476
 */

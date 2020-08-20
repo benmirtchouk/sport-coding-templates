@@ -5,8 +5,6 @@
 
 using namespace std;
 
-/* BEGIN AVL */
-
 struct avl {
   avl(int x): x(x), h(1), sz(1), l(0), r(0) {};
 

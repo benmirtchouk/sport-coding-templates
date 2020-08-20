@@ -1,26 +1,23 @@
 #include <bits/stdc++.h>
-#define N (1 << 18)
+#define all(a) a.begin(), a.end()
+#define forn(i,n) for(int i = 0; i < (int) n; i++)
+#define ios ios::sync_with_stdio(false); cin.tie(0); cout.tie(0)
+
+#define MAXN (1<<19)
 using namespace std;
 
-int BT[N];
+int BT[2][MAXN];
 
-void add(int x, int v) {
-  for(x++; x <= N; x += x&-x)
-    BT[x] += v;
+// vals[x] += v
+void add(int x, int v, int T[]) {
+  for(x++; x < MAXN; x += x & -x)
+    T[x] += v;
 }
 
-int get(int x) {
+// return sum of vals[i], 0 <= i <= x
+int get(int x, int T[]) {
   int ret = 0;
-  for(x++; x > 0; x &= x-1)
-    ret += BT[x];
+  for(x++; x > 0; x &= x - 1)
+    ret += T[x];
   return ret;
-}
-
-int main() {
-  vector<int> v {5, 6, 13, 1, 5, 3};
-
-  for (int i = 0; i < v.size(); i++)
-    add(i, v[i]);
-
-  cout << get(5) - get(1) << endl;
 }

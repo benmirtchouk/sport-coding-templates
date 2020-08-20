@@ -5,6 +5,8 @@
 
 using namespace std;
 
+// z[i] = len of the longest common prefix between s
+// and the suffix of s starting at i
 vector<int> zfun(string& s) {
   int n = s.size();
   vector<int> z(n);

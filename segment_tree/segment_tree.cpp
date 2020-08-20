@@ -7,7 +7,7 @@ using namespace std;
 
 typedef long long ll;
 
-ll sum[4*MAXN], mn[4*MAXN], lazy[4*MAXN];
+ll sum[4 * MAXN], mn[4 * MAXN], lazy[4 * MAXN];
 
 void push_down(int x, int l, int r) {
   if (l != r) {
@@ -91,17 +91,14 @@ void increment(int n, int l, int r, int lo, int hi, ll val) {
     lazy[n] += val;
     push_down(n, l, r);
   } else if (!(lo > r || l > hi)) {
+    assert(l != r);
     int c = (l + r) / 2;
     sum[n] += val * overlap(lo, hi, l, r);
 
-    if (l != r) {
-      increment(n * 2, l, c, lo, hi, val);
-      increment(n * 2 + 1, c + 1, r, lo, hi, val);
-    }
+    increment(n * 2, l, c, lo, hi, val);
+    increment(n * 2 + 1, c + 1, r, lo, hi, val);
 
-    mn[n] = sum[n];
-    if (l != r)
-      mn[n] = min(mn[n * 2], mn[n * 2 + 1]);
+    mn[n] = min(mn[n * 2], mn[n * 2 + 1]);
   }
 }
 

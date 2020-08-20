@@ -3,7 +3,6 @@
 using namespace std;
 
 int main() {
-
   function<void(int)> dfs = [&](int v) {
     all[v].insert(v);
     for (int u : g[v]) {

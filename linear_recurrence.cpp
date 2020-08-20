@@ -4,40 +4,43 @@
 #define ios ios::sync_with_stdio(false); cin.tie(0); cout.tie(0)
 
 #define MOD 1000000007
-#define MODe (MOD-1)
 using namespace std;
 typedef long long ll;
 typedef vector<vector<ll>> Mn;
 
-ll exp(ll a, ll p) {
+ll exp(ll a, ll p, ll mod) {
   if (!a) return 0;
   ll ans = 1;
   while(p) {
     if (p & 1)
-      ans = (ans * a) % MOD;
-    a = (a * a) % MOD;
+      ans = (ans * a) % mod;
+    a = (a * a) % mod;
     p >>= 1;
   }
   return ans;
 }
 
-Mn mult(Mn a, Mn b) {
-  assert(a[0].size() == b.size());
+int N = 3;
 
-  Mn ans(a.size(), vector<ll>(b[0].size()));
-  forn(i, a.size()) forn(j, b.size()) forn(k, b[0].size()) {
-    ans[i][k] += (a[i][j] * b[j][k]) % MODe;
-    ans[i][k] %= MODe;
+Mn mult(Mn a, Mn b, ll mod) {
+  Mn ans(N, vector<ll>(N));
+  forn(i, N) forn(j, N) forn(k, N) {
+    ans[i][k] += a[i][j] * b[j][k];
+    ans[i][k] %= mod;
   }
 
   return ans;
 }
 
-Mn exp(Mn A, ll p) {
-  if (p == 1) return A;
-  if (p % 2) return mult(A, exp(A, p - 1));
-  Mn X = exp(A, p / 2);
-  return mult(X, X);
+Mn exp(Mn A, ll p, ll mod) {
+  Mn ans(N, vector<ll>(N));
+  forn(i, N) ans[i][i] = 1;
+  while(p) {
+    if (p & 1) ans = mult(ans, A, mod);
+    A = mult(A, A, mod);
+    p >>= 1;
+  }
+  return ans;
 }
 
 int main() {
@@ -45,15 +48,15 @@ int main() {
   cin >> n >> f1 >> f2 >> f3 >> c;
 
   Mn M{{0, 1, 0}, {0, 0, 1}, {1, 1, 1}};
-  M = exp(M, n - 3);
+  M = exp(M, n - 3, MOD - 1);
 
   ll x = M[2][0], y = M[2][1], z = M[2][2];
-  ll p = ((x + 2 * y + 3 * z - n) % MODe + MODe) % MODe;
+  ll p = ((x + 2 * y + 3 * z - n) % (MOD - 1) + MOD - 1) % (MOD - 1);
 
-  ll ans = exp(c, p);
-  ans = (ans * exp(f1, x)) % MOD;
-  ans = (ans * exp(f2, y)) % MOD;
-  ans = (ans * exp(f3, z)) % MOD;
+  ll ans = exp(c, p, MOD);
+  ans = (ans * exp(f1, x, MOD)) % MOD;
+  ans = (ans * exp(f2, y, MOD)) % MOD;
+  ans = (ans * exp(f3, z, MOD)) % MOD;
 
   cout << ans << "\n";
 }
