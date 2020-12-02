@@ -8,7 +8,7 @@ typedef long long ll;
 
 deque<int> Q;
 void push(int x) {
-  while (!Q.empty() && Q.back() >= x)
+  while (!Q.empty() && Q.back() > x)
     Q.pop_back();
   Q.push_back(x);
 }

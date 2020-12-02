@@ -1,43 +1,50 @@
 #include <bits/stdc++.h>
+#define all(a) a.begin(), a.end()
+#define forn(i,n) for(int i = 0; i < (int) n; i++)
+#define ios ios::sync_with_stdio(false); cin.tie(0); cout.tie(0)
 
-#define inf (1<<30)
-
+#define inf (1ll<<30)
 using namespace std;
-
-typedef pair<int, int> pii;
-typedef vector<vector<pii>> Graph;
+typedef long long ll;
 
 int main() {
-  freopen("graph.in", "r", stdin);
+  ios;
+  int n, m;
+  cin >> n >> m;
 
-  int v, e;
-  cin >> v >> e;
-
-  vector<vector<int>> dist(v);
-  for (int i = 0; i < e; i++) {
+  vector<vector<pair<int, int>>> adj(n);
+  forn(i, m) {
     int a, b, w;
     cin >> a >> b >> w;
-    dist[a].push_back({b, w});
-    dist[b].push_back({a, w});
+    adj[a - 1].emplace_back(b - 1, w);
+    adj[b - 1].emplace_back(a - 1, w);
   }
 
-  vector<pii> cost(v + 1);
-  for (int i = 1; i <= v; i++)
-    cost[i] = {inf, i};
+  ll ans = 0;
+  vector<bool> done(n);
+  vector<ll> cost(n, inf);
+  cost[0] = 0;
 
-  int ans = 0;
-  for (int i = 0; i < v; i++) {
-    ans += cost[1].x;
+  priority_queue<pair<ll, int>> pq;
+  pq.push({0, 0});
 
-    for (int i = 0; i < adj[cost[1].y].size(); i++) {
-      int v = adj[cost[1].y][i];
-    }
+  while(!pq.empty()) {
+    int u = pq.top().second;
+    ll d = -pq.top().first;
+    pq.pop();
+    if (done[u]) continue;
 
+    done[u] = 1;
+    ans += cost[u];
+    assert(cost[u] == d);
 
-
+    for (auto& e : adj[u])
+      if (cost[e.first] > e.second) {
+        cost[e.first] = e.second;
+        pq.push({ -cost[e.first], e.first});
+      }
   }
 
   cout << ans << "\n";
-
   return 0;
 }
